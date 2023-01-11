@@ -12,47 +12,47 @@ pub const CRTFile = enum {
     crt1_reactor_o,
     crt1_command_o,
     libc_a,
-    libwasix_emulated_process_clocks_a,
-    libwasix_emulated_getpid_a,
-    libwasix_emulated_mman_a,
-    libwasix_emulated_signal_a,
+    libwasi_emulated_process_clocks_a,
+    libwasi_emulated_getpid_a,
+    libwasi_emulated_mman_a,
+    libwasi_emulated_signal_a,
 };
 
 pub fn getEmulatedLibCRTFile(lib_name: []const u8) ?CRTFile {
-    if (mem.eql(u8, lib_name, "wasix-emulated-process-clocks")) {
-        return .libwasix_emulated_process_clocks_a;
+    if (mem.eql(u8, lib_name, "wasi-emulated-process-clocks")) {
+        return .libwasi_emulated_process_clocks_a;
     }
-    if (mem.eql(u8, lib_name, "wasix-emulated-getpid")) {
-        return .libwasix_emulated_getpid_a;
+    if (mem.eql(u8, lib_name, "wasi-emulated-getpid")) {
+        return .libwasi_emulated_getpid_a;
     }
-    if (mem.eql(u8, lib_name, "wasix-emulated-mman")) {
-        return .libwasix_emulated_mman_a;
+    if (mem.eql(u8, lib_name, "wasi-emulated-mman")) {
+        return .libwasi_emulated_mman_a;
     }
-    if (mem.eql(u8, lib_name, "wasix-emulated-signal")) {
-        return .libwasix_emulated_signal_a;
+    if (mem.eql(u8, lib_name, "wasi-emulated-signal")) {
+        return .libwasi_emulated_signal_a;
     }
     return null;
 }
 
 pub fn emulatedLibCRFileLibName(crt_file: CRTFile) []const u8 {
     return switch (crt_file) {
-        .libwasix_emulated_process_clocks_a => "libwasix-emulated-process-clocks.a",
-        .libwasix_emulated_getpid_a => "libwasix-emulated-getpid.a",
-        .libwasix_emulated_mman_a => "libwasix-emulated-mman.a",
-        .libwasix_emulated_signal_a => "libwasix-emulated-signal.a",
+        .libwasi_emulated_process_clocks_a => "libwasi-emulated-process-clocks.a",
+        .libwasi_emulated_getpid_a => "libwasi-emulated-getpid.a",
+        .libwasi_emulated_mman_a => "libwasi-emulated-mman.a",
+        .libwasi_emulated_signal_a => "libwasi-emulated-signal.a",
         else => unreachable,
     };
 }
 
-pub fn execModelCrtFile(wasix_exec_model: std.builtin.wasixExecModel) CRTFile {
-    return switch (wasix_exec_model) {
+pub fn execModelCrtFile(wasi_exec_model: std.builtin.wasiExecModel) CRTFile {
+    return switch (wasi_exec_model) {
         .reactor => CRTFile.crt1_reactor_o,
         .command => CRTFile.crt1_command_o,
     };
 }
 
-pub fn execModelCrtFileFullName(wasix_exec_model: std.builtin.wasixExecModel) []const u8 {
-    return switch (execModelCrtFile(wasix_exec_model)) {
+pub fn execModelCrtFileFullName(wasi_exec_model: std.builtin.wasiExecModel) []const u8 {
+    return switch (execModelCrtFile(wasi_exec_model)) {
         .crt1_reactor_o => "crt1-reactor.o",
         .crt1_command_o => "crt1-command.o",
         else => unreachable,
@@ -147,7 +147,7 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
 
             try comp.build_crt_file("c", .Lib, libc_sources.items);
         },
-        .libwasix_emulated_process_clocks_a => {
+        .libwasi_emulated_process_clocks_a => {
             var args = std.ArrayList([]const u8).init(arena);
             try addCCArgs(comp, arena, &args, true);
             try addLibcBottomHalfIncludes(comp, arena, &args);
@@ -161,9 +161,9 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
                     .extra_flags = args.items,
                 });
             }
-            try comp.build_crt_file("wasix-emulated-process-clocks", .Lib, emu_clocks_sources.items);
+            try comp.build_crt_file("wasi-emulated-process-clocks", .Lib, emu_clocks_sources.items);
         },
-        .libwasix_emulated_getpid_a => {
+        .libwasi_emulated_getpid_a => {
             var args = std.ArrayList([]const u8).init(arena);
             try addCCArgs(comp, arena, &args, true);
             try addLibcBottomHalfIncludes(comp, arena, &args);
@@ -177,9 +177,9 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
                     .extra_flags = args.items,
                 });
             }
-            try comp.build_crt_file("wasix-emulated-getpid", .Lib, emu_getpid_sources.items);
+            try comp.build_crt_file("wasi-emulated-getpid", .Lib, emu_getpid_sources.items);
         },
-        .libwasix_emulated_mman_a => {
+        .libwasi_emulated_mman_a => {
             var args = std.ArrayList([]const u8).init(arena);
             try addCCArgs(comp, arena, &args, true);
             try addLibcBottomHalfIncludes(comp, arena, &args);
@@ -193,9 +193,9 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
                     .extra_flags = args.items,
                 });
             }
-            try comp.build_crt_file("wasix-emulated-mman", .Lib, emu_mman_sources.items);
+            try comp.build_crt_file("wasi-emulated-mman", .Lib, emu_mman_sources.items);
         },
-        .libwasix_emulated_signal_a => {
+        .libwasi_emulated_signal_a => {
             var emu_signal_sources = std.ArrayList(Compilation.CSourceFile).init(arena);
 
             {
@@ -216,7 +216,7 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
                 var args = std.ArrayList([]const u8).init(arena);
                 try addCCArgs(comp, arena, &args, true);
                 try addLibcTopHalfIncludes(comp, arena, &args);
-                try args.append("-D_wasix_EMULATED_SIGNAL");
+                try args.append("-D_wasi_EMULATED_SIGNAL");
 
                 for (emulated_signal_top_half_src_files) |file_path| {
                     try emu_signal_sources.append(.{
@@ -228,7 +228,7 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
                 }
             }
 
-            try comp.build_crt_file("wasix-emulated-signal", .Lib, emu_signal_sources.items);
+            try comp.build_crt_file("wasi-emulated-signal", .Lib, emu_signal_sources.items);
         },
     }
 }
@@ -460,14 +460,14 @@ const libc_bottom_half_src_files = [_][]const u8{
     "wasix/libc-bottom-half/cloudlibc/src/libc/unistd/usleep.c",
     "wasix/libc-bottom-half/cloudlibc/src/libc/unistd/write.c",
     "wasix/libc-bottom-half/sources/__main_void.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_dt.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_environ.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_fd_renumber.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_initialize_environ.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_real.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_rmdirat.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_tell.c",
-    "wasix/libc-bottom-half/sources/__wasixlibc_unlinkat.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_dt.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_environ.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_fd_renumber.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_initialize_environ.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_real.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_rmdirat.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_tell.c",
+    "wasix/libc-bottom-half/sources/__wasilibc_unlinkat.c",
     "wasix/libc-bottom-half/sources/abort.c",
     "wasix/libc-bottom-half/sources/accept.c",
     "wasix/libc-bottom-half/sources/at_fdcwd.c",
