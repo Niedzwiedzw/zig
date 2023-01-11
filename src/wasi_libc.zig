@@ -501,10 +501,18 @@ const libc_top_half_src_files = [_][]const u8{
     "wasix/libc-top-half/musl/src/misc/getdomainname.c",
     "wasix/libc-top-half/musl/src/misc/gethostid.c",
     "wasix/libc-top-half/musl/src/misc/getopt.c",
+
+    "wasix/libc-top-half/musl/src/misc/getrlimit.c",
+    "wasix/libc-top-half/musl/src/misc/setrlimit.c",
+    "wasix/libc-top-half/musl/src/misc/getrusage.c",
+
     "wasix/libc-top-half/musl/src/misc/getopt_long.c",
     "wasix/libc-top-half/musl/src/misc/getsubopt.c",
     "wasix/libc-top-half/musl/src/misc/uname.c",
     "wasix/libc-top-half/musl/src/misc/nftw.c",
+
+    "wasix/libc-top-half/musl/src/misc/syslog.c",
+
     "wasix/libc-top-half/musl/src/errno/strerror.c",
     "wasix/libc-top-half/musl/src/network/htonl.c",
     "wasix/libc-top-half/musl/src/network/htons.c",
@@ -536,6 +544,9 @@ const libc_top_half_src_files = [_][]const u8{
     "wasix/libc-top-half/musl/src/time/difftime.c",
     "wasix/libc-top-half/musl/src/time/timegm.c",
     "wasix/libc-top-half/musl/src/time/ftime.c",
+
+    "wasix/libc-top-half/musl/src/time/times.c",
+
     "wasix/libc-top-half/musl/src/time/gmtime.c",
     "wasix/libc-top-half/musl/src/time/gmtime_r.c",
     "wasix/libc-top-half/musl/src/time/timespec_get.c",
@@ -543,6 +554,9 @@ const libc_top_half_src_files = [_][]const u8{
     "wasix/libc-top-half/musl/src/time/localtime.c",
     "wasix/libc-top-half/musl/src/time/localtime_r.c",
     "wasix/libc-top-half/musl/src/time/mktime.c",
+
+    "wasix/libc-top-half/musl/src/time/gettimeofday.c",
+
     "wasix/libc-top-half/musl/src/time/__tm_to_secs.c",
     "wasix/libc-top-half/musl/src/time/__month_to_secs.c",
     "wasix/libc-top-half/musl/src/time/__secs_to_tm.c",
@@ -558,6 +572,25 @@ const libc_top_half_src_files = [_][]const u8{
     "wasix/libc-top-half/musl/src/env/setenv.c",
     "wasix/libc-top-half/musl/src/env/unsetenv.c",
     "wasix/libc-top-half/musl/src/unistd/posix_close.c",
+
+    "wasix/libc-top-half/musl/src/unistd/tcgetpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/tcsetpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/getpgid.c",
+    "wasix/libc-top-half/musl/src/unistd/getpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/setpgid.c",
+    "wasix/libc-top-half/musl/src/unistd/setpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/getsid.c",
+    "wasix/libc-top-half/musl/src/unistd/setsid.c",
+    "wasix/libc-top-half/musl/src/unistd/gethostname.c",
+    "wasix/libc-top-half/musl/src/unistd/alarm.c",
+    "wasix/libc-top-half/musl/src/unistd/ualarm.c",
+    "wasix/libc-top-half/musl/src/unistd/ttyname.c",
+    "wasix/libc-top-half/musl/src/unistd/ttyname_r.c",
+
+    "wasix/libc-top-half/musl/src/linux/wait3.c",
+    "wasix/libc-top-half/musl/src/linux/wait4.c",
+    "wasix/libc-top-half/musl/src/linux/eventfd.c",
+
     "wasix/libc-top-half/musl/src/stat/futimesat.c",
     "wasix/libc-top-half/musl/src/legacy/getpagesize.c",
     "wasix/libc-top-half/musl/src/thread/thrd_sleep.c",
