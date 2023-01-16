@@ -44,14 +44,14 @@ pub fn emulatedLibCRFileLibName(crt_file: CRTFile) []const u8 {
     };
 }
 
-pub fn execModelCrtFile(wasi_exec_model: std.builtin.wasiExecModel) CRTFile {
+pub fn execModelCrtFile(wasi_exec_model: std.builtin.WasiExecModel) CRTFile {
     return switch (wasi_exec_model) {
         .reactor => CRTFile.crt1_reactor_o,
         .command => CRTFile.crt1_command_o,
     };
 }
 
-pub fn execModelCrtFileFullName(wasi_exec_model: std.builtin.wasiExecModel) []const u8 {
+pub fn execModelCrtFileFullName(wasi_exec_model: std.builtin.WasiExecModel) []const u8 {
     return switch (execModelCrtFile(wasi_exec_model)) {
         .crt1_reactor_o => "crt1-reactor.o",
         .crt1_command_o => "crt1-command.o",
@@ -100,10 +100,10 @@ pub fn buildCRTFile(comp: *Compilation, crt_file: CRTFile) !void {
             var libc_sources = std.ArrayList(Compilation.CSourceFile).init(arena);
 
             {
-                // Compile emmalloc.
+                // Compile dlmalloc.
                 var args = std.ArrayList([]const u8).init(arena);
                 try addCCArgs(comp, arena, &args, true);
-                for (emmalloc_src_files) |file_path| {
+                for (dlmalloc_src_files) |file_path| {
                     try libc_sources.append(.{
                         .src_path = try comp.zig_lib_directory.join(arena, &[_][]const u8{
                             "libc", try sanitize(arena, file_path),
@@ -395,8 +395,8 @@ fn addLibcTopHalfIncludes(
     });
 }
 
-const emmalloc_src_files = [_][]const u8{
-    "wasix/emmalloc/emmalloc.c",
+const dlmalloc_src_files = [_][]const u8{
+    "wasix/dlmalloc/dlmalloc.c",
 };
 
 const libc_bottom_half_src_files = [_][]const u8{
